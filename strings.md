@@ -1,5 +1,5 @@
-## Strings
-#### Introductions
+# Strings
+## Introductions
 - Each characters in a string can be found if we know the index to ask for.
 - Zero based index system is how ruby operates.
 - The method slice is the same as the bracket method.
@@ -18,10 +18,10 @@ This is a here document! Even indents work.
 
 - For interpolation, you can actually put in method names within `"#{}"`. Whatever the method returns will go inside the hash-bracket.
 
-#### Regular Expressions and String Manipulation
+## Regular Expressions and String Manipulation
 - A *regular expression* is essentially a search query. It is a string that describes a pattern for matching elements in other strings.
 
-##### Substitutions
+### Substitutions
   - Example being `puts 'foobar'.sub('bar', 'foo')` which returns `'foofoo'`. The `sub` method substitutes the **FIRST** instance of the first parameter with the second parameter. `gsub` does multiple substitutions at once, example being `puts "this is a test".gsub('i', '')` returning `"ths s a test"`. `gsub` substituted all occurrences of `'i'` with an empty `''` string. BUT THIS IS ALL SIMPLE. TIME TO GET COMPLEX.
   - More complex example can be seen below. This time the regular expression matches the two characters that are anchored to the end of any lines within the string.
       - If you want to anchor to the absolute start or end of a string, use can use `\A` and `\z` respectively, wherease `^` and `$` anchor to the starts and ends of lines within a string.
@@ -33,7 +33,7 @@ This is a here document! Even indents work.
   ```
   Hellois a test
 
-#### Iteration with a Regular Expression
+### Iteration with a Regular Expression
   - Use the method `scan` if you want to iterate through a string and have access to each section of it separately.
   ```ruby
   'xyz'.scan(/./) {|letter| puts letter}
@@ -121,4 +121,4 @@ This is a here document! Even indents work.
   a <br/>
   e <br/>
 
-#### Matching
+### Matching
