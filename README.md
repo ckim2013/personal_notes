@@ -5,4 +5,4 @@ This is just where I write my own personal notes and thoughts as I venture into 
 ## Table of Content
 - [**Methods**](https://github.com/ckim2013/personal-notes/blob/master/methods.md)
 - [**Strings**](https://github.com/ckim2013/personal-notes/blob/master/strings.md)
-- [**Arrays**]()
+- [**Arrays**](https://github.com/ckim2013/personal-notes/blob/master/arrays.md)

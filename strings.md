@@ -4,12 +4,12 @@
 ## Introductions
 - Each characters in a string can be found if we know the index to ask for.
 - Zero based index system is how ruby operates.
-- The method slice is the same as the bracket method.
-- For the slice method, you can pass it two arguments, the first being the starting index and the second being the total number of characters.
-`“string”.slice(0, 3)` is NOT the same as `“string”[0..3]` but IS the same as `“string”[0...3]`. You can also use ranges with slice instead of arguments which will serve the same way as the bracket method. You can also use arguments (like 2 arguments) in brackets which will serve the same way as the slice method!
-- For the `include?` and index methods, the characters in the argument have to be in the exact order as seen in the receiver or else the methods will return nil. For the delete and count methods, the characters in the argument do not have to be in the same order as seen in the receiver, although delete will delete EVERY instance of each character in the argument.
+- The `method` slice is the same as the bracket `[]` method.
+- For the `slice` method, you can pass it two arguments, the first being the starting index and the second being the total number of characters.
+`“string”.slice(0, 3)` is NOT the same as `“string”[0..3]` but IS the same as `“string”[0...3]`. You can also use ranges with slice instead of arguments which will serve the same way as the bracket method. You can also use arguments (like 2 arguments) in brackets which will serve the same way as the `slice` method!
+- For the `include?` and index methods, the characters in the argument have to be in the exact order as seen in the receiver or else the methods will return `nil`. For the `delete` and `count` methods, the characters in the argument do not have to be in the same order as seen in the receiver, although delete will delete EVERY instance of each character in the argument.
 - The only things the backslash `\` escapes, are the apostrophe and the backslash itself.
-- Before puts tries to write out an object, it uses `to_s` to get the string version of that object. The s in puts stands for string; puts really means put string. However, you can’t do `puts 20 “hello”`. The s in gets also stands for string.
+- Before `puts` tries to write out an object, it uses `to_s` to get the string version of that object. The s in puts stands for string; `puts` really means put string. However, you can’t do `puts 20 “hello”`. The s in `gets` also stands for string.
 - One way to make a multi-line string without having to worry about delimiters is to use a *here document*.
 ```ruby
 x = <<123_ANYTHING_I_WANT_tosay
@@ -148,7 +148,7 @@ puts x[2]
 # The first element (x[0]) contains the data
 # matched by the entire regular expression.
 # However, each successive element contains that
-# which was matched by each match group of the 
+# which was matched by each match group of the
 # regular expression. In this example, the first
 # (\w+) matched This and the second (\w+) matched is.
 ```
