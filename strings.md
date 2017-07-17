@@ -1,4 +1,6 @@
 # Strings
+**Note: Much of regular expression information is obtained straight from Beginning Ruby 3rd edition by Peter Cooper!**
+
 ## Introductions
 - Each characters in a string can be found if we know the index to ask for.
 - Zero based index system is how ruby operates.
@@ -122,3 +124,34 @@ This is a here document! Even indents work.
   e <br/>
 
 ### Matching
+- Sometimes you just want to check whether a certain string matches against a pattern of choice. You might want to establish quickly if if a string contains any vowels. Example below!
+```ruby
+puts 'String has vowels' if 'This is a test' =~ /[aeiou]/
+```
+
+In this example, `=~` is a *matching operator*. If the string has a match with the regular expression following the operator, then the expression returns the position of the first match (2 in this case—which logically is non-false, so the if condition is satisfied).
+- Here is an opposite of the above example! If no matches can be found, then `nil` is returned.
+```ruby
+puts "String contains no digits" unless "This is a test" =~ /[0-9]/
+```
+
+- We can also use the method `match`. `match` returns a `MatchData` object that can be accessed like an array.
+```ruby
+puts "String has vowels" if "This is a test".match(/[aeiou]/)
+```
+- If you surround a section of expression with parenthesis--( and )--the data matched by that section of the regular expression is made available separately from the rest.
+```ruby
+x = "This is a test".match(/(\w+) (\w+)/)
+puts x[0]
+puts x[1]
+puts x[2]
+# The first element (x[0]) contains the data
+# matched by the entire regular expression.
+# However, each successive element contains that
+# which was matched by each match group of the 
+# regular expression. In this example, the first
+# (\w+) matched This and the second (\w+) matched is.
+```
+This is <br/>
+This    <br/>
+is      <br/>
