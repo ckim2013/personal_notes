@@ -1,7 +1,7 @@
 # Strings
 **Note: Much of regular expression information is obtained straight from Beginning Ruby 3rd edition by Peter Cooper!**
 
-## General
+## Random Snippets
 - Each characters in a string can be found if we know the index to ask for.
 - Zero based index system is how ruby operates.
 - The `method` slice is the same as the bracket `[]` method.
@@ -10,6 +10,7 @@
 - For the `include?` and index methods, the characters in the argument have to be in the exact order as seen in the receiver or else the methods will return `nil`. For the `delete` and `count` methods, the characters in the argument do not have to be in the same order as seen in the receiver, although delete will delete EVERY instance of each character in the argument.
 - The only things the backslash `\` escapes, are the apostrophe and the backslash itself.
 - Before `puts` tries to write out an object, it uses `to_s` to get the string version of that object. The s in puts stands for string; `puts` really means put string. However, you can’t do `puts 20 “hello”`. The s in `gets` also stands for string.
+- `split` without parameters on a string creates an array with blank spaces stripped away in between words in a string. `split` is quite [complex](https://ruby-doc.org/core-2.2.0/String.html#method-i-split). 
 - One way to make a multi-line string without having to worry about delimiters is to use a *here document*.
 ```ruby
 x = <<123_ANYTHING_I_WANT_tosay

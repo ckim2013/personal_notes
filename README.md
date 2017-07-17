@@ -6,3 +6,4 @@ This is just where I write my own personal notes and thoughts as I venture into 
 - [**Methods**](https://github.com/ckim2013/personal-notes/blob/master/methods.md)
 - [**Strings**](https://github.com/ckim2013/personal-notes/blob/master/strings.md)
 - [**Arrays and Hashes**](https://github.com/ckim2013/personal-notes/blob/master/arrays_hashes.md)
+- [**Flow Control**](https://github.com/ckim2013/personal-notes/blob/master/flow_control.md)

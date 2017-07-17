@@ -1,4 +1,8 @@
 # Methods (aka functions)
+
+## Random Snippets
+- Always group default value parameters together or else an error will occur.
+
 ## Introduction
 - They have sequences of steps (subroutine) that can be executed at any time.
 - We can wrap steps in a method (into the method body) and tell Ruby to invoke the method once needed.

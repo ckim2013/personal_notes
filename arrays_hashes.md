@@ -1,6 +1,6 @@
 # Arrays
 
-## General
+## Random Snippets
 - You can’t use `slice` for reassignment. Just use the bracket method `[] =`. You can do reassignment with the bracket-argument method and bracket-range method.
 - Assigning a new element with an index not available in an array will add the new element and fill the rest of the indices with `nil`.
 - The methods `take` and `drop` have arguments representing amount of elements, **NOT** index.
@@ -22,11 +22,16 @@ p x - y
 ```
 [1, false]
 
+- To create arrays, you can use the `Array.new(any_number) { Array.new(any_number) }` which can create multi-dimensional arrays filled with `nil`.
+- `%w{ cat sheep dog     bear }` will return an array `["cat", "sheep", "dog", "bear"]`. You can add as many spaces in between the words which won't change the returning array.
+- `reduce` and `inject` do practically the same thing.
+
+
 # Hashes
 
-## General
+## Random Snippets
 - Both arrays and hashes are used to store collections of objects.
 - Hashes do not keep track of insertion orders unlike arrays. Instead, we look up items using key-value pairs.
 - Any ruby object can be a valid key or value in a hash.
 - When you set up a counter hash with an empty array as a default, shoveling values regardless of which key you use modifies the counter default array.
-- Hashes do have order even though you use them when you don’t really care about order.
+- Hashes do have order even though you use them when you don’t really care about order. The order in which the elements were inserted into the hash will be remembered, and each will return them in that order.
