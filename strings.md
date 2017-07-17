@@ -1,7 +1,7 @@
 # Strings
 **Note: Much of regular expression information is obtained straight from Beginning Ruby 3rd edition by Peter Cooper!**
 
-## Introductions
+## General
 - Each characters in a string can be found if we know the index to ask for.
 - Zero based index system is how ruby operates.
 - The `method` slice is the same as the bracket `[]` method.
@@ -30,13 +30,12 @@ This is a here document! Even indents work.
 
   ```ruby
   x = 'This is a test'
-  puts x.sub(/^../), 'Hello')
-  # This puts out 'Hellois a test'
+  puts x.sub(/^../, 'Hello')
   ```
   Hellois a test
 
 ### Iteration with a Regular Expression
-  - Use the method `scan` if you want to iterate through a string and have access to each section of it separately.
+  - Use the method `scan` if you want to iterate through a string and have access to each section of it separately. `scan` without a code block will return an array.
   ```ruby
   'xyz'.scan(/./) {|letter| puts letter}
   ```
@@ -129,7 +128,7 @@ This is a here document! Even indents work.
 puts 'String has vowels' if 'This is a test' =~ /[aeiou]/
 ```
 
-In this example, `=~` is a *matching operator*. If the string has a match with the regular expression following the operator, then the expression returns the position of the first match (2 in this case—which logically is non-false, so the if condition is satisfied).
+In this example, `=~` is a *matching* operator. If the string has a match with the regular expression following the operator, then the expression returns the position of the first match (2 in this case—which logically is non-false, so the if condition is satisfied).
 - Here is an opposite of the above example! If no matches can be found, then `nil` is returned.
 ```ruby
 puts "String contains no digits" unless "This is a test" =~ /[0-9]/
