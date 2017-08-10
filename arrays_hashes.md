@@ -22,7 +22,7 @@ p x - y
 ```
 [1, false]
 
-- To create arrays, you can use the `Array.new(any_number) { Array.new(any_number) }` which can create multi-dimensional arrays filled with `nil`.
+- You can use the `Array.new(any_number) { Array.new(any_number) }` which can create multi-dimensional arrays filled with `nil`. However, you can also use `Array.new(any_number) { Array.new(any_number, "blah") }` which will replace `nil` with `"blah"`.
 - `%w{ cat sheep dog     bear }` will return an array `["cat", "sheep", "dog", "bear"]`. You can add as many spaces in between the words which won't change the returning array.
 - `reduce` and `inject` do practically the same thing.
 

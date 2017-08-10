@@ -10,7 +10,7 @@
 - For the `include?` and index methods, the characters in the argument have to be in the exact order as seen in the receiver or else the methods will return `nil`. For the `delete` and `count` methods, the characters in the argument do not have to be in the same order as seen in the receiver, although delete will delete EVERY instance of each character in the argument.
 - The only things the backslash `\` escapes, are the apostrophe and the backslash itself.
 - Before `puts` tries to write out an object, it uses `to_s` to get the string version of that object. The s in puts stands for string; `puts` really means put string. However, you can’t do `puts 20 “hello”`. The s in `gets` also stands for string.
-- `split` without parameters on a string creates an array with blank spaces stripped away in between words in a string. `split` is quite [complex](https://ruby-doc.org/core-2.2.0/String.html#method-i-split). 
+- `split` without parameters on a string creates an array with blank spaces stripped away in between words in a string. `split` is quite [complex](https://ruby-doc.org/core-2.2.0/String.html#method-i-split).
 - One way to make a multi-line string without having to worry about delimiters is to use a *here document*.
 ```ruby
 x = <<123_ANYTHING_I_WANT_tosay
@@ -23,6 +23,7 @@ This is a here document! Even indents work.
 
 ## Regular Expressions and String Manipulation
 - A *regular expression* is essentially a search query. It is a string that describes a pattern for matching elements in other strings.
+- [Rubular: A Ruby regular expression editor!](http://rubular.com/)
 
 ### Substitutions
   - Example being `puts 'foobar'.sub('bar', 'foo')` which returns `'foofoo'`. The `sub` method substitutes the **FIRST** instance of the first parameter with the second parameter. `gsub` does multiple substitutions at once, example being `puts "this is a test".gsub('i', '')` returning `"ths s a test"`. `gsub` substituted all occurrences of `'i'` with an empty `''` string. BUT THIS IS ALL SIMPLE. TIME TO GET COMPLEX.
@@ -63,6 +64,22 @@ This is a here document! Even indents work.
   te <br/>
   st <br/>
 
+  - **BUT** keep in mind that if you want to use `scan` to make each word of a text into an element of an array, `/\w+/` will not count hyphenations or ', etc.
+  - You can use pipes which separates main characters and treats them separately. This way, a method like `split` can match one or another. Example below!
+  ```ruby
+  'This, is a test!! What???'.scan(/\w\w|,|\?\?|!!/) { |x| puts x }
+  ```
+  Th <br/>
+  is <br/>
+  ,  <br/>
+  is  <br/>
+  te <br/>
+  st <br/>
+  !! <br/>
+  Wh <br/>
+  at <br/>
+  ?? <br/>
+
   - ****Basic Special Characters and Symbols Within Regular Expressions****
 
 
@@ -79,6 +96,7 @@ This is a here document! Even indents work.
   | `\D`        | Anything that `\d` doesn't match (non-digit)|
   | `\s`        | Whitespace (spaces, tabs, newlines, etc.)   |
   | `\S`        | Non-whitespace (any visible character)      |
+  | `\n`        | New line                                    |
 
   - Example below! `\d` matches any digit and the + that follows `\d` makes `\d` match as many digits in a row as possible. Without the +, the computer will print out individual numbers at a time.
 
