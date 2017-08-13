@@ -1,0 +1,220 @@
+# SQL
+
+## Programming Paradigms
+- Programming paradigms: Ways to classify programming languages according to their style!
+- Two opposite types in Ruby: imperative and declarative.
+  - Imperative Programming
+    - The original style of high-level languages which feeds step-by-step instructions for the computer to execute. Example below:
+    ```ruby
+    def imperative_odds?(array)
+      idx = 0
+      odds = []
+      while (idx < array.length)
+        if array[idx].odd?
+          odds << array[idx]
+        end
+        i += 1
+      end
+      odds
+    end
+    ```
+  - Declarative Programming
+    - Describes what you want to achieve, without going into to much detail about how your'e going to do it. Example below:
+    ```ruby
+    def declarative_odds?(array)
+      odds = array.select { |el| el.odd? }
+    end
+    ```
+
+## Databases
+- Relational databases (RDBMS, relational database management systems) provide a means of organizing data and their relationships, persisting the data, and querying that data.
+- RDBMS organize data in tables like the one below.
+
+| id            | name          | age  |
+| ------------- | ------------- | ----- |
+|1|Chris|22|
+|2|Thai|24|
+|3|Jesse|54|
+|4|Paolo|48|
+|5|Alvin|33|
+|6|Katrina|98|
+- Each row = single entity in the table. Each column houses additional piece of data associated with each instance of the resource. Every row in a database has a primary key (`id`) which will be the unique identifier in that table row.
+
+## Database Schemas
+- It's a description of the organization of your database into tables and columns. Ask yourself, what data does my application need to function?
+- We have to first decide on three things:
+  - The tables we will have
+  - The columns each of those tables will have
+  - The data type of each of those columns
+- Schemas are mutable so you do not need to decide all of this immediately.
+- SQL is statically typed vs Ruby which is dynamically typed (there is no need to specify in method parameters or variables the class (type) of the data stored in it).
+- Most common datatypes in columns:
+  - `BOOLEAN`
+  -  `INT`
+  - `FLOAT` (stores "floating point" numbers)
+  - `VARCHAR(255)` (a string with a length limit of 255 characters)
+  - `TEXT` (a string of unlimited length)
+  - `DATE`
+  - `DATETIME`
+  - `TIME`
+  - `BLOB` (non-textual, wildcard, binary data; e.g. an image)
+
+## Modeling Relationships
+- We can model relationships between entries in separate tables through foreign keys. A foreign key is a value in a database table whose responsibility is to point to a row in a different table. An example of this can be users and their blog posts. Make another table and have their foreign keys, `user_id` in another column. The foreign key in one table will reference the primary key in another table. We usually call the column that houses the foreign key.
+
+## Structured Query Language (SQL)
+- SQL is a domain-specific language that is designed to query data out of relational databases. Example below where we find crazy cat people:
+```SQL
+SELECT
+  name, age, has_cats
+FROM
+  tenants
+WHERE
+  (has_cats = true AND age > 50)
+```
+- SQL is broken down into clauses (`SELECT`, `FROM`, `WHERE`).
+  - `SELECT`: Takes a list of comma-separated column names (only these columns of data will be retrieved).
+  - `FROM`: Takes a table name to query.
+  - `WHERE`: Takes a list of conditions separated by `AND` or `OR`. Only rows matching these conditions are returned.
+    - Supports standard comparison and equality operators (`<`, `>`, `>=`, `<=`, `=`, `!=`) and boolean operators (`AND`, `OR`, `NOT`).
+  - Four main data manipulation operations for SQL
+    - `SELECT`: Retrieve values from one or more rows.
+    - `INSERT`: Insert a row into a table.
+    - `UPDATE`: Update values in one or more existing rows.
+    - `DELETE`: Delete one or more rows.
+  - Below are brief descriptions of each of the operators syntactical signatures and a couple simple examples of their use:
+    - `SELECT`
+      - Structure:
+      ```SQL
+      SELECT
+        one or more columns (or all columns with *)
+      FROM
+        one (or more tables, joined with JOIN)
+      WHERE
+        one (or more conditions, joined with AND/OR);
+      ```
+      - Examples (separted by `;`):
+      ```SQL  
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        name = 'Ned';
+      SELECT
+        account_number, account_type
+      FROM
+        accounts
+      WHERE
+        (customer_id = 5 AND account_type = 'checking');
+      ```
+    - `INSERT`
+      - Structure
+      ```SQL
+      INSERT INTO
+        table name (column names)
+      VALUES
+        (values);
+      ```
+      - Examples:
+      ```SQL
+      INSERT INTO
+        users (name, age, height_in_inches)
+      VALUES
+        ('Santa Clause', 876, 34);
+      INSERT INTO
+        accounts (account_number, customer_id, account_type)
+      VALUES
+        (12345, 76, 'savings');
+      ```
+    - `UPDATE`
+      - Structure
+      ```SQL
+      UPDATE
+        table_name
+      SET
+        col_name1 = value1,
+        col_name2 = value2
+      WHERE
+        conditions
+      ```
+      - Examples:
+      ```SQL
+      UPDATE
+        users
+      SET
+        name = 'Eddard Stark', house = 'Winterfell'
+      WHERE
+        name = 'Ned Stark';
+      UPDATE
+        accounts
+      SET
+        balance = 30
+      WHERE
+        id = 6;
+      ```
+    - `DELETE`
+      - Structure
+      ```SQL
+      DELETE FROM
+        table_name
+      WHERE
+        conditions
+      ```
+    - Examples:
+      ```SQL
+      DELETE FROM
+        users
+      WHERE
+        (name = 'Eddard Stark' AND house = 'Winterfell');
+      DELETE FROM
+        accounts
+      WHERE
+        customer_id = 999;
+      ```
+
+## Schema Definitions
+- You need to define database schema before quering.
+- Three operators to manipulate a database schema:
+  - `CREATE TABLE`
+  - `ALTER TABLE`
+  - `DROP TABLE`
+- Example of creating a users table
+  ```SQL
+  CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    birth_date DATE,
+    house VARCHAR(255),
+    favorite_food VARCHAR(20)
+  );
+  ```
+- `CREATE TABLE` specifies name of the table and then in parentheses, the list of column names along with their data types.  
+
+## Querying across multiple tables (JOIN)
+- How do we query across tables at once?
+- `JOIN` joins together two tables => temporary combined table that you can query from just like any other.
+- `JOIN` clauses include `ON` statement. Here, we specify how exactly those two tables relate to each other. Here, we need foreign keys. Example below (query that returns title of all blog posts written by each user):
+```SQL
+SELECT
+  user.name, posts.title
+FROM
+  posts
+JOIN
+  users ON posts.user_id = users.id
+```
+- Above returns one row per post, with user's name appearing next to the title of the post they authorized. We can associate user data to posts without adding columns that would duplicate data from other tables in the database and other rows in the `post` table. Just `JOIN` as needed. So we joined two different tables using a foreign key stored in a single column.
+- Other variations of `JOIN` exist.
+  - Self joins where we join a table to itself.
+  - Joins that use multiple columns to specify the `ON` condition.
+- In an example of users liking posts for a website (many-to-many-relationship), we can use a join table that contains a foreign key for each table, allowing us to represent each like with a row linking a user to a post. Then we need two joins to associate users and like posts like shown below:
+```SQL
+SELECT
+  user.name, posts.title
+FROM
+  posts
+JOIN
+  likes ON posts.id = likes.post_id
+JOIN
+  users ON likes.user_id = users.id
+```
