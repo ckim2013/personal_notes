@@ -1,5 +1,16 @@
 # SQL
 
+## Introduction
+- Supported by all major commercial database systems.
+- SQL can be used in a database systems interactively through a GUI or prompt, or embedded in programs.
+- SQL is declarative, based on relational algebra.
+  - Query optimizer: Takes a query written in SQL and finds out the best, and fastest way to execute that on the database.
+- Data Definition Language (DDL)
+  - Includes commands to create tables, drop tables, etc.
+- Data Manipulation Language (DML)
+  - Query and modify the database. Includes `SELECT`, `INSERT`, `DELETE`, `UPDATE`, etc.
+- Relational query languages are compositional: When you run a query over relations, you get a relation as a result.
+
 ## Programming Paradigms
 - Programming paradigms: Ways to classify programming languages according to their style!
 - Two opposite types in Ruby: imperative and declarative.
@@ -19,7 +30,7 @@
     end
     ```
   - Declarative Programming
-    - Describes what you want to achieve, without going into to much detail about how your'e going to do it. Example below:
+    - Describes what you want to achieve, without going into to much detail about how you're going to do it. Example below:
     ```ruby
     def declarative_odds?(array)
       odds = array.select { |el| el.odd? }
@@ -41,12 +52,12 @@
 - Each row = single entity in the table. Each column houses additional piece of data associated with each instance of the resource. Every row in a database has a primary key (`id`) which will be the unique identifier in that table row.
 
 ## Database Schemas
-- It's a description of the organization of your database into tables and columns. Ask yourself, what data does my application need to function?
+- It's a description of the organization of your database into tables and columns. What data does my application need to function?
 - We have to first decide on three things:
   - The tables we will have
   - The columns each of those tables will have
   - The data type of each of those columns
-- Schemas are mutable so you do not need to decide all of this immediately.
+- Schemas are mutable so decisions upfront are not set in stone.
 - SQL is statically typed vs Ruby which is dynamically typed (there is no need to specify in method parameters or variables the class (type) of the data stored in it).
 - Most common datatypes in columns:
   - `BOOLEAN`
@@ -218,3 +229,61 @@ JOIN
 JOIN
   users ON likes.user_id = users.id
 ```
+
+## [A Visual Explanation of Joins](https://blog.codinghorror.com/a-visual-explanation-of-sql-joins/)
+
+## Self Joins
+- Self join: an instance of a table joining with itself. Example below:
+##### Employee Table
+
+| id             | first_name     | last_name      | manager_id     |
+| :------------- | :------------- | :------------- | :------------- |
+| 1              | Kush           | Patel          | NULL           |
+| 2              | Jeff           | Fiddler        | 1              |
+| 3              | Quinn          | Leong          | 2              |
+| 4              | Shamayel       | Daoud          | 2              |
+| 5              | Robert         | Koeze          | 4              |
+| 6              | Munyo          | Frey           | 3              |
+| 7              | Kelly          | Chung          | 4              |
+
+```SQL
+SELECT
+  team_member.first_name, team_member.last_name, manager.first_name, manager.last_name
+FROM
+  employee AS team_member
+JOIN
+  employee AS manager ON manager.id = team_member.manager_id
+```
+| team_member.first_name | team_member.last_name | manager.first_name | manager.last_name |
+| :--------------------- | :-------------------- | :----------------- | :---------------- |
+| Jeff                   | Fiddler               | Kush               | Patel             |
+| Quinn                  | Leong                 | Jeff               | Fiddler           |
+| Shamayel               | Daoud                 | Jeff               | Fiddler           |
+| Robert                 | Koeze                 | Shamayel           | Daoud             |
+| Munyo                  | Frey                  | Quinn              | Leong             |
+| Kelly                  | Chung                 | Shamayel           | Daoud             |
+- We need aliases (nicknames for tables) when dealing with one table in a self join. Aliases are needed because the query processor needs to make a distinction between the duplicates of the same table to JOIN them. Above SQL can be rewritten as below because `AS` is not necessary to alias tables or columns:
+```SQL
+SELECT
+  team_member.first_name, team_member.last_name, manager.first_name, manager.last_name
+FROM
+  employee team_member
+JOIN
+  employee manager ON manager.id = team_member.manager_id
+```
+
+## Formatting SQL Code
+- Name SQL tables **snake_case** and **pluralized**.
+- Always have a column named `id` to use as primary keys.
+- Complex `WHERE` clauses are parenthesized and indented two spaces on the following line.
+
+## [Subqueries](https://sqlbolt.com/topic/subqueries)
+
+## NULL and Ternary Logic in SQL
+- SQL uses ternary logic where a conditional statement can evaluate to `TRUE`, `FALSE`, or `NULL` (unknown) where `NULL` is still falsy.
+- `NULL` was derived to represent an unknown value. So `NULL == NUL` will be false.
+- Always use `IS NULL` or `IS NOT NULL` in lieu of `==` or `!=` comparisons.
+
+## [CASE](http://www.postgresqltutorial.com/postgresql-case/)
+
+## [COALESCE](http://www.postgresqltutorial.com/postgresql-coalesce/)
