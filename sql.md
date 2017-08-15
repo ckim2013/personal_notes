@@ -88,6 +88,7 @@ WHERE
   - `FROM`: Takes a table name to query.
   - `WHERE`: Takes a list of conditions separated by `AND` or `OR`. Only rows matching these conditions are returned.
     - Supports standard comparison and equality operators (`<`, `>`, `>=`, `<=`, `=`, `!=`) and boolean operators (`AND`, `OR`, `NOT`).
+    - You do not always need a where! Sometimes, problems can be solved using `HAVING` after `GROUP BY`
   - Four main data manipulation operations for SQL
     - `SELECT`: Retrieve values from one or more rows.
     - `INSERT`: Insert a row into a table.
@@ -287,3 +288,113 @@ JOIN
 ## [CASE](http://www.postgresqltutorial.com/postgresql-case/)
 
 ## [COALESCE](http://www.postgresqltutorial.com/postgresql-coalesce/)
+
+## Example of creating a table
+- We will create two tables of plays and playwrights:
+  ```SQL
+  -- import_db.sql
+  CREATE TABLE plays (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    playwright_id INTEGER NOT NULL
+
+    FOREIGN KEY (playwright_id) REFERENCES playwrights(id)
+  );
+
+  CREATE TABLE playwrights (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    birth_year INTEGER
+  );
+
+  -- We should add data to the playwrights first due to the foreign key in plays. We cannot create an instance of play until we have a reference which in this is playwrights
+  INSERT INTO
+    playwrights (name, birth_year)
+  VALUES
+    ('Arthur Miller', 1915),
+    ('Eugene O'' Neill', 1888); -- Have to use '' instead of escape key as seen in ruby
+
+  INSERT INTO
+    plays (title, year, playwright_id)
+  VALUES
+    ('All My Sons', 1947, (SELECT id FROM playwrights WHERE name = 'Arthur Miller')),
+    ('Long Days''s Journey Into Night', 1956, (SELECT id FROM playwrights WHERE name = 'Eugene O'' Neill'));
+  ```
+- Anytime we want to add a row, the title column is not optional, we need to have that information! That is why we add `NOT NULL`. This is implicit for `PRIMARY KEY`.
+- After writing the above, we would go into terminal and type in `cat import_db.sql | sqlite3 plays.db`.
+- Above is saying that we want to concatenate (`cat`) the output for the import_db.sql file and we want to throw it in `sqlite3`, specifically in a file called `plays.db`. We would now have a file that was created in the same working folder as in the `import_db.sql`.
+- We can then write in the terminal `sqlite3 plays.db`. Some useful commands:
+  - `.tables`: Show us what tables we have in the database.
+  - `.schema`: Representation of the structure of our database (no values but how our data is configured).
+- We can add to our database via below in terminal:
+  - `INSERT INTO playwrights (name, birth_year) VALUE ('Tennessee Williams', 1911);`
+- We can extract this database into pry via below (done in pry):
+  - `require "sqlite3"` which loads the gem.
+  - `plays_db = SQLite3::Database.new('./plays.db')` which assigns an instance of the database to a variable.
+  - `plays_db.execute("SELECT * FROM plays")` Takes in a string that is a SQL query and will run that against the database. This will return an array.
+  - `plays_db.execute("INSERT INTO plays (title, year, playwright_id) VALUE ('The Glass Menagerie', 1944, 3)")`
+
+## SQLite ORM (Object Relational Mapping)
+- How we might implement an ORM for the plays database:
+```ruby
+require 'sqlite3'
+require 'singleton'
+# Makes sure that we only ever have one instance of our database
+class PlayDBConnection < SQLite3::Database
+  include Singleton
+  def initialize
+    super('plays.db')
+    self.type_translation = true
+    # Makes sure that all the data we get back is the same datatype as
+    # the data we passed into the database.
+    self.results_as_hash = true
+    # We want the data to come back as a hash. Every column is a key that
+    # points to a value stored in the column.
+    #
+  end
+end
+class Play
+  attr_accessor :title, :year, :playwright_id
+  def self.all
+    # Shows us every entrance we have in our plays database.
+    # data will hold an array of hashes.
+    data = PlayDBConnection.instance.execute("SELECT * FROM plays")
+    # ORM aspect below
+    data.map { |datum| Play.new(datum) }
+  end
+  def initialize(options)
+    # Creates a new instance of the play class.
+    @id = options['id'] # Either be defined or set to nil
+    @title = options['title']
+    @year = options['year']
+    @playwright_id = options['playwright_id']
+  end
+  def create
+    # Saves the instance to the database.
+    raise "#{self} is already in the database" if @id
+    # Heardoc allows us embed a bunch of code that will just be read in as a string
+    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id)
+      INSERT INTO
+        plays (title, year, playwright_id)
+      VALUES
+        (?, ?, ?) -- Pulls values from the instance variables next to <<-SQL.
+    SQL
+    # ? protects us from SQL injection attacks (malicious users)
+    # playwright_id == "3, DROP TABLE plays"
+    @id = PlayDBConnection.instance.last_insert_row_id
+  end
+  def update
+    # When we want to update information in our table.
+    raise "#{self} not in database" unless @id
+    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id, @id)
+      UPDATE
+        plays
+      SET
+        title = ?, year = ?, playwright_id = ? -- Don't want to change ID here.
+      WHERE
+        id = ?
+    SQL
+  end
+end
+```
