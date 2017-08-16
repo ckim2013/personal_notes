@@ -11,3 +11,6 @@ This is just where I write my own personal notes and thoughts as I venture into 
 - [**References**](https://github.com/ckim2013/personal-notes/blob/master/references.md)
 - [**Recursion**](https://github.com/ckim2013/personal-notes/blob/master/recursion.md)
 - [**Big O**](https://github.com/ckim2013/personal-notes/blob/master/big_o.md)
+- [**Sets**](https://github.com/ckim2013/personal-notes/blob/master/sets.md)
+- [**SQL**](https://github.com/ckim2013/personal-notes/blob/master/sql.md)
+- [**Rails**](https://github.com/ckim2013/personal-notes/blob/master/rails.md)
