@@ -1,4 +1,4 @@
-# Rails
+# Rails Part 1 
 
 ## Intro
 - To get started, type in `rails new <project_name> -d postgresql` into the terminal.
