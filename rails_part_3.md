@@ -1,5 +1,6 @@
 # Rails Part 3
-
+## Disclaimer
+- There might be some typos in the code since there is A LOT OF CODE. Be warned.
 ## Views Intro
 - The user starts in the browser, makes a request (to `/users` for example), that is going to git the router, the router will go to an action in a controller, that controller will interact with the database to query up any data we need, and then send it back (via json or some other way) to the user. But now we will use that information about users that we have in the controller to generate a view which will be sent back to the user.
 - Views will be located in `app/views`. To create a view, find the folder with the topic in hand (like `books`) and create an HTML file (`index.html.erb`).
@@ -154,4 +155,165 @@ def book_params
   # This will permit attributes and return a hash that we can pass in directly when we try to create a new instance of book!
   params.require(:book).permit(:title, :author, :year, :category, :description)
 end
+```
+
+## Partials
+- If we want the user to update a book, we need to add this functionality into our routes.
+```ruby
+Rails.application.routes.draw do
+  resources :books, only: [:index, :show, :new, :create, :edit, :update]
+end
+```
+Edit is the form and update will actually update the database. If you look at the routes in the terminal, you will see that update uses both `PATCH` and `PUT`. `PUT` is used when we are replacing an object entirely in the database.
+- Let's add these actions into our `books_controller.rb`:
+```ruby
+def edit
+  # You can tell that we have access to :id in params by looking at the routes in terminal. If you see something like /books/:id/etc, that means we have access to the :id
+  @book = Book.find_by(id: params[:id])
+end
+def update
+  @book = Book.find_by(id: params[:id])
+  if @book.update_attributes(book_params)
+    redirect_to book_url(@book)
+  else
+    render :edit
+  end
+end
+def new #update new
+  @book = Book.new # dummy book: not going to pass in any parameters because all of these parameters will default to nil which is important for making our partial template.
+  render :new
+end
+```
+- Let's make a `edit.html.erb` template with modifications to method in form among others:
+```html
+<h1>Edit book in library!</h1>
+<!-- Again, we can just pass in @book and rails will find the id for us -->
+<form action="<%= book_url(@book) %>" method="post">
+  <!-- Has to be post in the method since browser can't handle patch (get and post only) but there is a workaround (shown below)-->
+  <input type="hidden" name="_method" value="PATCH">
+  <!-- Above will still be in params but it would not be exposed to the user -->
+  <!-- Writing _method tells rails that this is the actual method that we want rails to use and NOT post -->
+
+  <label for="title">Title</label>
+  <input id="title" type="text" name="book[title]" value="<%= @book.title %>">
+
+  <br>
+
+  <label for="author">Author</label>
+  <input id="author" type="text" name="book[author]" value="<%= @book.author %>">
+
+  <br>
+
+  <label for="year">Year</label>
+  <input id="year" type="date" name="book[year]" value="<%= @book.year %>">
+
+  <br>
+
+  <label for="category">Category</label>
+  <select id="category" name="book[category]">
+    <option disabled >-- Please Select --</option>
+    <option value="Fiction" <%= @book.category == "Fiction" ? "selected" : "" %> >Fiction</option>
+    <option value="Non-Fiction" <%= @book.category == "Non-Fiction" ? "selected" : "" %> >Non-Fiction</option>
+    <option value="Memoir" <%= @book.category == "Memoir" ? "selected" : "" %> >Memoir</option>
+  </select>
+
+  <br><br>
+
+  <label for="description">Description</label>
+  <textarea name="book[description]">
+    <%= @book.description %>
+  </textarea>
+
+  <input type="submit" value="Update book in library">
+</form>
+```
+This is NOT DRY! Since this is almost a copy and paste. This is when partials come in. All of the common HTML from two views will be saved into a different file. That file will then be rendered into this current view and still gets the same HTML all the way up.
+- Let's make a form partial! Make a new file in the `views/books`. We will give it a name `_form.html.erb`. The underscore is a sign that this is not a template that should be rendered on its own. It is intended to be rendered in another template.
+```html
+<!--
+  Things to change!
+    - action (done using ruby code right below)
+    - hidden input for patch (done by doing if else statement under form)
+    - pre-filled values (done by taking out the @ and fix the dropdown using ternary)
+    - submit button (done by using ternary in the submit)
+-->
+<% if action == :edit %>
+  <% action_url == book_url(book) %> <!-- We don't use @book because we are passing book as a local variable. We are now relying on a local variable being passed through. -->
+<% else %>
+    <% action_url = books_url %>
+<% end %>
+<form action="<%= action_url %>" method="post">
+  <% if action == :edit %>
+    <input type="hidden" name="_method" value="PATCH">
+  <% end %>
+
+  <label for="title">Title</label>
+  <input id="title" type="text" name="book[title]" value="<%= book.title %>">
+
+  <br>
+
+  <label for="author">Author</label>
+  <input id="author" type="text" name="book[author]" value="<%= book.author %>">
+
+  <br>
+
+  <label for="year">Year</label>
+  <input id="year" type="date" name="book[year]" value="<%= book.year %>">
+
+  <br>
+
+  <label for="category">Category</label>
+  <select id="category" name="book[category]">
+    <option disabled <%= book.category.nil? ? "" : "selected" %> >-- Please Select --</option>
+    <option value="Fiction" <%= book.category == "Fiction" ? "selected" : "" %> >Fiction</option>
+    <option value="Non-Fiction" <%= book.category == "Non-Fiction" ? "selected" : "" %> >Non-Fiction</option>
+    <option value="Memoir" <%= book.category == "Memoir" ? "selected" : "" %> >Memoir</option>
+  </select>
+
+  <br><br>
+
+  <label for="description">Description</label>
+  <textarea name="book[description]">
+    <%= book.description %>
+  </textarea>
+
+  <input type="submit" value="<%= action == :edit ? 'update book' : 'add book'%>">
+</form>
+```
+- Our new `edit.html.erb` will look like:
+```html
+<h1>Edit book in library!</h1>
+<%= render 'form', book: @book, action: :edit %>
+<!-- Don't put the underscore here! Rails will know what to do. -->
+<!-- We can pass in variables after 'form' -->
+```
+- Our new `new.html.erb` will look like this:
+```html
+<h1>Edit book in library!</h1>
+<%= render 'form', book: @book, action: :new %>
+```
+- LET'S MAKE ANOTHER PARTIAL BECAUSE WHY THE HECK NOT! INSTANCE OF A MODEL IS NEXT!
+- Let's make another partial called `_book.html.erb`:
+```html
+<li>
+  <%= book.title %> by <%= book.author %>
+</li>
+```
+- Go back to `index.html.erb` and change as so:
+```html
+<h1>All the books!</h1>
+<ul>
+  <% @books.each do |book| %>
+    <!-- <%# render 'book', book: book %>
+    Instead of using the above, rails magic lets us write the following below-->
+    <%= render book %>
+  <% end %>
+</ul>
+```
+However, rails being stupidly magical, can do the following instead:
+```html
+<h1>All the books!</h1>
+<ul>
+  <%= render @books %>
+</ul>
 ```
