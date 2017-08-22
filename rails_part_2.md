@@ -23,6 +23,7 @@
   - A body which is the main chunk of what came back in this response. If you made a request to get a list of all the users, your body is going to be the list of all those users. If you made a request to get an actual website, the body would contain all of the HTML, JS, etc needed to render the website.  
 
 ## Rails Routing
+- You can view routes by typing into terminal, `bundle exec rails routes`.
 - An HTTP request comes, received by rails, and first hits the router.
 - The router is something in rails that is supposed to determine, who should I send this too?
 - The router will take into consideration the path of the request and the method of the request. The path could be `/users` and the method could be `get` to get the users.
