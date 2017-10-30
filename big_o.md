@@ -74,3 +74,51 @@ end
 ## Space and Time
 - How much resources is our algorithm taking up relative to the size of the input, specifically how that taking up of the resources scales as the input size grows.
 - XOR (`^` NOT TO BE CONFUSED WITH TO THE POWER OF AS PREVIOUSLY USED ABOVE): It only returns true if both arguments are different. If you XOR the same number into any byte representation twice, it will cancel itself out. Example being `2` and `3`. Byte representation for `2` is `010` and for `3` is `011`. If we XOR `2` into `3`, we will get some result and if we XOR `2` into it again, we will get back `3`. See this in use to solve which one element is different between two arrays here: https://vimeo.com/175565092.
+
+## Reprise
+- The asymptomatic behavior of a function refers to its rate of growth as its input size approaches infinity.
+Allows us to focus on the big picture and compare algorithms from a high level.
+- Many factors affect the time it takes for a function to run: the speed of the processor, what else the computer is running, etc. Big O is only concerned with performance relative to the input size.
+- Algorithm may have steps that seam expensive when n is small but are eclipsed by other steps as n approaches infinity. We only care about the stuff that grows the fastest s the input.
+- Big O notation describes the algorithm's worst case.
+- Big O talks about orders, not about specifics.
+- We don't care about constant coefficients.
+
+### Constant
+- Indexing into array is constant time.
+
+### Logarithmic
+- Binary search is an example (log base 2 of n).
+- Divide and conquer algorithm.
+
+### Linear Time
+- Iteration over arrays, lengths of words, etc.
+
+### Linearithic / Log-linear
+- Merge sort is an example.
+  - 2 of log 2 of n.
+
+### Quadratic
+- Quicksort (worst case if it the array is backwards or if it is already in order since it has to use every element as a pivot!), Bubble Sort.
+- Ruby uses quicksort when you use the sort method.
+
+### Exponential
+- Opposite of log. When we add an extra input, we multiply itself by a certain amount.
+- An example is subsets.
+
+### Factorial
+- n - 1 factorial elements for permutation, and we are iterating over each of those elements, and for each one, we are iterating over the length of the permutation (which the length of any permutation is n). So we have n * (n - 1)! which is still n!. ***Revisit***
+
+### Benchmark
+- A ruby gem to test benchmarks for algorithms.
+```ruby
+require 'benchmark'
+puts 'bubble sort!'
+Benchmark.bm do |b|
+  b.report('1_000:   ') { bubble_sort(short) }
+end
+```
+
+### Some new sorts to explore
+- Insertion sort (quadratic?)
+- Selection sort (quadratic)
