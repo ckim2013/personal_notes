@@ -108,6 +108,7 @@ Allows us to focus on the big picture and compare algorithms from a high level.
 
 ### Factorial
 - n - 1 factorial elements for permutation, and we are iterating over each of those elements, and for each one, we are iterating over the length of the permutation (which the length of any permutation is n). So we have n * (n - 1)! which is still n!. ***Revisit***
+- In the problem, we see that we are taking a permutation of (n - 1). However, it is safe to assume that finding a previous permutation is less computationally taxing so we can actually just ignore it for now. When we get to the iteration step, we are iterating over the perms which actually has a space complexity of (n - 1)! (which we actually use to determine space complexity). Then we have another iteration which is why we ultimately have a space complexity of n(n - 1)! leading to n!. 
 
 ### Benchmark
 - A ruby gem to test benchmarks for algorithms.
